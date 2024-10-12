@@ -1,0 +1,230 @@
+<html><head>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+<title>我的個人網站(繳交作業用)</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;700&display=swap');
+
+body {
+  font-family: 'Noto Sans TC', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+header {
+  background-color: #2c3e50;
+  color: white;
+  text-align: center;
+  padding: 2rem 0;
+}
+
+h1 {
+  margin: 0;
+  font-size: 2.5rem;  
+}
+
+nav {
+  background-color: #34495e;
+  padding: 1rem 0;
+}
+
+nav ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+}
+
+nav ul li {
+  margin: 0 1rem;
+}
+
+nav ul li a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+nav ul li a:hover {
+  color: #3498db;
+}
+
+main {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+section {
+  background-color: white;
+  border-radius: 8px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+  color: #2c3e50;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 0.5rem;
+}
+
+.skill-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.skill-item {
+  background-color: #3498db;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+}
+
+.projects {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.project-card {
+  background-color: #ecf0f1;
+  border-radius: 8px;
+  padding: 1rem;
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.project-card:hover {
+  transform: translateY(-5px);
+}
+
+footer {
+  background-color: #2c3e50;
+  color: white;
+  text-align: center;
+  padding: 1rem 0;
+  position: relative;
+  bottom: 0;
+  width: 100%;
+}
+
+#logo {
+  width: 100px;
+  height: 100px;
+  margin-bottom: 1rem;
+}
+
+.animate-on-scroll {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s, transform 0.5s;
+}
+
+.animate-on-scroll.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+</style>
+</head>
+<body>
+  <header>
+    <svg id="logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="50" cy="50" r="45" fill="#3498db"/>
+      <text x="50" y="60" font-size="40" text-anchor="middle" fill="white">個人</text>
+    </svg>
+    <h1>許禎的個人品牌</h1>
+  </header>
+
+  <nav>
+    <ul>
+      <li><a href="#about">關於我</a></li>
+      <li><a href="#skills">專業技能</a></li>
+      <li><a href="#projects">作品集</a></li>
+      <li><a href="#contact">聯絡我</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <section id="about" class="animate-on-scroll">
+      <h2>關於我</h2>
+      <p>嗨！我是許禎。</p>
+    </section>
+
+    <section id="skills" class="animate-on-scroll">
+      <h2>專業技能</h2>
+      <div class="skill-list">
+        <span class="skill-item">HTML5</span>
+        <span class="skill-item">CSS3</span>
+        <span class="skill-item">JavaScript</span>
+        <span class="skill-item">React</span>
+        <span class="skill-item">Vue.js</span>
+        <span class="skill-item">Responsive Design</span>
+        <span class="skill-item">UI/UX Design</span>
+      </div>
+    </section>
+
+    <section id="projects" class="animate-on-scroll">
+      <h2>作品集</h2>
+      <div class="projects">
+        <div class="project-card">
+          <h3><a href="/homework1">功課1 - 線性回歸範例</a></h3>
+          <p>功課1</p>
+        </div>
+        <div class="project-card">
+          <h3>功課2</h3>
+          <p>功課2</p>
+        </div>
+        <div class="project-card">
+          <h3>功課3</h3>
+          <p>功課3</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="animate-on-scroll">
+      <h2>聯絡我</h2>
+      <p>如果您對我的作品感興趣，或者有任何合作機會，歡迎與我聯繫！</p>
+      <p>Email: <a href="mailto:jacky804024@email.com">jacky804024 @email.com</a></p>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2024 許禎的個人品牌. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // Animate elements on scroll
+    function animateOnScroll() {
+      const elements = document.querySelectorAll('.animate-on-scroll');
+      elements.forEach(element => {
+        const elementTop = element.getBoundingClientRect().top;
+        const windowHeight = window.innerHeight;
+        if (elementTop < windowHeight - 100) {
+          element.classList.add('visible');
+        }
+      });
+    }
+
+    window.addEventListener('scroll', animateOnScroll);
+    animateOnScroll(); // Initial check on page load
+
+    // Animate logo on page load
+    gsap.from("#logo", {duration: 1, scale: 0, ease: "bounce.out"});
+
+    // Animate navigation items
+    gsap.from("nav ul li", {
+      duration: 0.5,
+      opacity: 0,
+      y: -20,
+      stagger: 0.1,
+      ease: "power2.out"
+    });
+  </script>
+</body>
+</html>
