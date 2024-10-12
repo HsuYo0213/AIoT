@@ -12,7 +12,9 @@ Contact Information
 For permission requests or inquiries regarding the use of this website's content, please contact:
 
 Email: jacky804024@gmail.com
+
 Personal Profile: JACKY's Personal Profile
+
 I reserve the right to update these terms at any time. Please review this page regularly for any changes.
 
 Thank you for your understanding and compliance!
