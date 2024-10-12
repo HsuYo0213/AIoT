@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>功課1 - 線性回歸範例</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <style>
+        canvas {
+            border: 1px solid black;
+            display: block;
+            margin: 20px auto;
+        }
+    </style>
+</head>
+<body>
+
+<h1 style="text-align: center;">線性回歸範例</h1>
+<canvas id="plotCanvas" width="600" height="400"></canvas>
+
+<script>
+    async function runLinearRegression() {
+        // 生成合成數據
+        const xs = [];
+        const ys = [];
+        for (let i = 0; i < 100; i++) {
+            const x = Math.random() * 2; // 0 到 2 之間的隨機數
+            const y = 4 + 3 * x + Math.random(); // y = 4 + 3x + 隨機噪聲
+            xs.push(x);
+            ys.push(y);
+        }
+
+        // 將數據轉換為 Tensor
+        const xTensor = tf.tensor1d(xs);
+        const yTensor = tf.tensor1d(ys);
+
+        // 創建模型
+        const model = tf.sequential();
+        model.add(tf.layers.dense({ units: 1, inputShape: [1] }));
+
+        // 編譯模型
+        model.compile({ loss: 'meanSquaredError', optimizer: 'sgd' });
+
+        // 訓練模型
+        await model.fit(xTensor, yTensor, { epochs: 100 });
+
+        // 做預測
+        const xNew = tf.tensor2d([[0], [2]]);
+        const yPredict = model.predict(xNew);
+        const yPredictData = await yPredict.data();
+
+        // 繪製結果
+        drawChart(xs, ys, yPredictData);
+    }
+
+    function drawChart(xs, ys, yPredict) {
+        const canvas = document.getElementById('plotCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // 清除畫布
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // 繪製數據點
+        ctx.fillStyle = 'blue';
+        for (let i = 0; i < xs.length; i++) {
+            ctx.fillRect(xs[i] * 300, 400 - ys[i] * 100, 4, 4);
+        }
+
+        // 繪製回歸線
+        ctx.strokeStyle = 'red';
+        ctx.beginPath();
+        ctx.moveTo(0, 400 - yPredict[0] * 100);
+        ctx.lineTo(600, 400 - yPredict[1] * 100);
+        ctx.stroke();
+    }
+
+    // 執行線性回歸
+    runLinearRegression();
+</script>
+
+</body>
+</html>
