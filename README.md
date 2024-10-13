@@ -13,7 +13,7 @@ For permission requests or inquiries regarding the use of this website's content
 
 Email: jacky804024@gmail.com
 
-Personal Profile**: [https://github.com/HsuZhen/AIoT](https://github.com/HsuZhen/AIoT)
+Personal Profile: [https://github.com/HsuZhen/AIoT](https://github.com/HsuZhen/AIoT)
 
 I reserve the right to update these terms at any time. Please review this page regularly for any changes.
 
