@@ -1,28 +1,126 @@
-<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-<div id="plot"></div>
-<script>
-  // Generating data
-  const X = Array.from({length: 100}, () => Math.random() * 2);
-  const y = X.map(x => 4 + 3 * x + Math.random());
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>功課1 - 線性回歸</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        h1, h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .step {
+            margin-bottom: 40px;
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: white;
+        }
+        #plot {
+            width: 100%;
+            height: 400px;
+        }
+        .btn-back {
+            display: block;
+            margin: 30px auto;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+        }
+        .btn-back:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
 
-  // Simple Linear Regression in JS
-  let n = X.length;
-  let sumX = X.reduce((a, b) => a + b, 0);
-  let sumY = y.reduce((a, b) => a + b, 0);
-  let sumXY = X.map((xi, i) => xi * y[i]).reduce((a, b) => a + b, 0);
-  let sumX2 = X.map(xi => xi * xi).reduce((a, b) => a + b, 0);
-  
-  let slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX ** 2);
-  let intercept = (sumY - slope * sumX) / n;
+    <h1>功課1 - 線性回歸範例</h1>
 
-  // Predicted line
-  const xLine = [0, 2];
-  const yLine = xLine.map(x => intercept + slope * x);
+    <!-- Step 1: Data Generation -->
+    <div class="step">
+        <h2>Step 1: 資料生成</h2>
+        <p>此步驟產生隨機資料作為線性迴歸的樣本。</p>
+    </div>
 
-  // Plotting with Plotly
-  const trace1 = { x: X, y: y, mode: 'markers', type: 'scatter', name: 'Data Points' };
-  const trace2 = { x: xLine, y: yLine, mode: 'lines', name: 'Regression Line' };
+    <!-- Step 2: Model Training -->
+    <div class="step">
+        <h2>Step 2: 建立迴歸模型</h2>
+        <p>我們使用樣本資料訓練線性回歸模型。</p>
+    </div>
 
-  const layout = { title: 'Linear Regression Example', xaxis: { title: 'X' }, yaxis: { title: 'Y' } };
-  Plotly.newPlot('plot', [trace1, trace2], layout);
-</script>
+    <!-- Step 3: Predictions -->
+    <div class="step">
+        <h2>Step 3: 模型預測</h2>
+        <p>根據模型對新的輸入進行預測。</p>
+    </div>
+
+    <!-- Step 4: Visualization -->
+    <div class="step">
+        <h2>Step 4: 可視化結果</h2>
+        <div id="plot"></div>
+    </div>
+
+    <!-- Back Button -->
+    <button class="btn-back" onclick="goBack()">返回首頁</button>
+
+    <script>
+        function goBack() {
+            window.location.href = "index.html";
+        }
+
+        // Data Generation
+        const X = Array.from({ length: 100 }, () => Math.random() * 2);
+        const y = X.map(x => 4 + 3 * x + Math.random());
+
+        // Linear Regression
+        let n = X.length;
+        let sumX = X.reduce((a, b) => a + b, 0);
+        let sumY = y.reduce((a, b) => a + b, 0);
+        let sumXY = X.map((xi, i) => xi * y[i]).reduce((a, b) => a + b, 0);
+        let sumX2 = X.map(xi => xi * xi).reduce((a, b) => a + b, 0);
+
+        let slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX ** 2);
+        let intercept = (sumY - slope * sumX) / n;
+
+        // Predictions
+        const xLine = [0, 2];
+        const yLine = xLine.map(x => intercept + slope * x);
+
+        // Plot with Plotly
+        const trace1 = {
+            x: X, y: y,
+            mode: 'markers',
+            type: 'scatter',
+            name: 'Data Points'
+        };
+
+        const trace2 = {
+            x: xLine, y: yLine,
+            mode: 'lines',
+            name: 'Regression Line'
+        };
+
+        const layout = {
+            title: 'Linear Regression Example',
+            xaxis: { title: 'X' },
+            yaxis: { title: 'Y' }
+        };
+
+        Plotly.newPlot('plot', [trace1, trace2], layout);
+    </script>
+
+</body>
+</html>
