@@ -1,91 +1,28 @@
-<!DOCTYPE html>
-<html lang="zh-TW">
-<head>
-    <meta charset="UTF-8">
-    <title>線性回歸範例 - TensorFlow.js</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
-    <style>
-        canvas {
-            border: 1px solid black;
-            display: block;
-            margin: 20px auto;
-        }
-        button {
-            display: block;
-            margin: 20px auto;
-            padding: 10px 20px;
-            font-size: 16px;
-            background-color: #3498db;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        button:hover {
-            background-color: #2980b9;
-        }
-    </style>
-</head>
-<body>
-
-<h1 style="text-align: center;">線性回歸範例</h1>
-<canvas id="plotCanvas" width="600" height="400"></canvas>
-
-<button onclick="goBack()">返回上一頁</button>
-
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<div id="plot"></div>
 <script>
-    async function runLinearRegression() {
-        const xs = [];
-        const ys = [];
-        for (let i = 0; i < 100; i++) {
-            const x = Math.random() * 2;
-            const y = 4 + 3 * x + Math.random();
-            xs.push(x);
-            ys.push(y);
-        }
+  // Generating data
+  const X = Array.from({length: 100}, () => Math.random() * 2);
+  const y = X.map(x => 4 + 3 * x + Math.random());
 
-        const xTensor = tf.tensor1d(xs);
-        const yTensor = tf.tensor1d(ys);
+  // Simple Linear Regression in JS
+  let n = X.length;
+  let sumX = X.reduce((a, b) => a + b, 0);
+  let sumY = y.reduce((a, b) => a + b, 0);
+  let sumXY = X.map((xi, i) => xi * y[i]).reduce((a, b) => a + b, 0);
+  let sumX2 = X.map(xi => xi * xi).reduce((a, b) => a + b, 0);
+  
+  let slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX ** 2);
+  let intercept = (sumY - slope * sumX) / n;
 
-        const model = tf.sequential();
-        model.add(tf.layers.dense({ units: 1, inputShape: [1] }));
+  // Predicted line
+  const xLine = [0, 2];
+  const yLine = xLine.map(x => intercept + slope * x);
 
-        model.compile({ loss: 'meanSquaredError', optimizer: 'sgd' });
+  // Plotting with Plotly
+  const trace1 = { x: X, y: y, mode: 'markers', type: 'scatter', name: 'Data Points' };
+  const trace2 = { x: xLine, y: yLine, mode: 'lines', name: 'Regression Line' };
 
-        await model.fit(xTensor, yTensor, { epochs: 50 });
-
-        const xNew = tf.tensor2d([[0], [2]]);
-        const yPredict = model.predict(xNew);
-        const yPredictData = await yPredict.data();
-
-        drawChart(xs, ys, yPredictData);
-    }
-
-    function drawChart(xs, ys, yPredict) {
-        const canvas = document.getElementById('plotCanvas');
-        const ctx = canvas.getContext('2d');
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        ctx.fillStyle = 'blue';
-        for (let i = 0; i < xs.length; i++) {
-            ctx.fillRect(xs[i] * 300, 400 - ys[i] * 100, 4, 4);  // 調整繪圖比例
-        }
-
-        ctx.strokeStyle = 'red';
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.moveTo(0, 400 - yPredict[0] * 100);
-        ctx.lineTo(600, 400 - yPredict[1] * 100);
-        ctx.stroke();
-    }
-
-    function goBack() {
-        window.history.back();
-    }
-
-    runLinearRegression();
+  const layout = { title: 'Linear Regression Example', xaxis: { title: 'X' }, yaxis: { title: 'Y' } };
+  Plotly.newPlot('plot', [trace1, trace2], layout);
 </script>
-
-</body>
-</html>
