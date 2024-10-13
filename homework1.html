@@ -3,36 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Linear Regression</title>
+    <title>Linear Regression Demo</title>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-    <h1>Interactive Linear Regression with Adjustable Parameters</h1>
-    
-    <div>
-        <label for="slope">Select Slope (a): </label>
-        <input type="range" id="slope" min="-100" max="100" step="0.1" value="1">
-        <span id="slopeValue">1</span>
+<body class="bg-light">
+
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Linear Regression with Adjustable Parameters</h1>
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card mb-3">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="card-title mb-0">Input Parameters</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="slope" class="form-label">Select Slope (a)</label>
+                            <input type="range" class="form-range" id="slope" min="-100" max="100" step="0.1" value="1">
+                            <span class="badge bg-secondary" id="slopeValue">1</span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="noise" class="form-label">Select Noise Scale (c)</label>
+                            <input type="range" class="form-range" id="noise" min="0" max="100" step="0.1" value="0">
+                            <span class="badge bg-secondary" id="noiseValue">0</span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="points" class="form-label">Select Number of Points (n)</label>
+                            <input type="range" class="form-range" id="points" min="10" max="500" value="100">
+                            <span class="badge bg-secondary" id="pointsValue">100</span>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn btn-outline-primary w-100" onclick="window.history.back()">返回上一頁</button>
+            </div>
+
+            <div class="col-md-8">
+                <div id="plot" style="width:100%;height:500px;"></div>
+            </div>
+        </div>
     </div>
-
-    <div>
-        <label for="noise">Select Noise Scale (c): </label>
-        <input type="range" id="noise" min="0" max="100" step="0.1" value="0">
-        <span id="noiseValue">0</span>
-    </div>
-
-    <div>
-        <label for="points">Select Number of Points (n): </label>
-        <input type="range" id="points" min="10" max="500" value="100">
-        <span id="pointsValue">100</span>
-    </div>
-
-    <div id="plot" style="width:80%;height:500px;"></div>
-
-    <button onclick="window.history.back()">返回上一頁</button>
 
     <script>
-        // Get input elements
         const slopeInput = document.getElementById('slope');
         const noiseInput = document.getElementById('noise');
         const pointsInput = document.getElementById('points');
@@ -40,7 +55,6 @@
         const noiseValue = document.getElementById('noiseValue');
         const pointsValue = document.getElementById('pointsValue');
 
-        // Update UI values
         function updateValues() {
             slopeValue.textContent = slopeInput.value;
             noiseValue.textContent = noiseInput.value;
@@ -48,21 +62,18 @@
             plotLinearRegression();
         }
 
-        // Generate data based on user input
         function generateData(slope, noise, points) {
             const X = Array.from({ length: points }, () => Math.random() * 20 - 10);
             const Y = X.map(x => slope * x + 50 + noise * (Math.random() - 0.5));
             return { X, Y };
         }
 
-        // Plot the regression
         function plotLinearRegression() {
             const slope = parseFloat(slopeInput.value);
             const noise = parseFloat(noiseInput.value);
             const points = parseInt(pointsInput.value);
             const { X, Y } = generateData(slope, noise, points);
 
-            // Calculate regression line
             const sumX = X.reduce((a, b) => a + b, 0);
             const sumY = Y.reduce((a, b) => a + b, 0);
             const sumXY = X.reduce((sum, x, i) => sum + x * Y[i], 0);
@@ -75,7 +86,6 @@
             const xLine = [-10, 10];
             const yLine = xLine.map(x => intercept + calcSlope * x);
 
-            // Plot the data and regression line
             const trace1 = { x: X, y: Y, mode: 'markers', name: 'Data Points' };
             const trace2 = { x: xLine, y: yLine, mode: 'lines', name: 'Regression Line' };
 
@@ -88,13 +98,12 @@
             Plotly.newPlot('plot', [trace1, trace2], layout);
         }
 
-        // Add event listeners
         slopeInput.addEventListener('input', updateValues);
         noiseInput.addEventListener('input', updateValues);
         pointsInput.addEventListener('input', updateValues);
 
-        // Initial plot
         plotLinearRegression();
     </script>
+
 </body>
 </html>
