@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>功課1 - 線性回歸</title>
+    <title>功課1 - 線性回歸 STEP 1 & STEP 2</title>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <style>
         body {
@@ -17,16 +17,15 @@
             text-align: center;
             margin-bottom: 20px;
         }
-        .step {
-            margin-bottom: 40px;
-            border: 1px solid #ccc;
-            padding: 20px;
-            border-radius: 10px;
-            background-color: white;
-        }
         #plot {
             width: 100%;
-            height: 400px;
+            height: 500px;
+        }
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
         }
         .btn-back {
             display: block;
@@ -48,32 +47,17 @@
 <body>
 
     <h1>功課1 - 線性回歸範例</h1>
+    <h2>STEP 1 和 STEP 2</h2>
 
-    <!-- Step 1: Data Generation -->
-    <div class="step">
-        <h2>Step 1: 資料生成</h2>
-        <p>此步驟產生隨機資料作為線性迴歸的樣本。</p>
+    <div class="controls">
+        <label for="slope">斜率 (a): </label>
+        <input type="range" id="slope" min="-100" max="100" value="3" step="1">
+        <label for="noise">噪聲 (c): </label>
+        <input type="range" id="noise" min="0" max="100" value="10" step="1">
     </div>
 
-    <!-- Step 2: Model Training -->
-    <div class="step">
-        <h2>Step 2: 建立迴歸模型</h2>
-        <p>我們使用樣本資料訓練線性回歸模型。</p>
-    </div>
+    <div id="plot"></div>
 
-    <!-- Step 3: Predictions -->
-    <div class="step">
-        <h2>Step 3: 模型預測</h2>
-        <p>根據模型對新的輸入進行預測。</p>
-    </div>
-
-    <!-- Step 4: Visualization -->
-    <div class="step">
-        <h2>Step 4: 可視化結果</h2>
-        <div id="plot"></div>
-    </div>
-
-    <!-- Back Button -->
     <button class="btn-back" onclick="goBack()">返回首頁</button>
 
     <script>
@@ -81,45 +65,60 @@
             window.location.href = "index.html";
         }
 
-        // Data Generation
-        const X = Array.from({ length: 100 }, () => Math.random() * 2);
-        const y = X.map(x => 4 + 3 * x + Math.random());
+        function generateData(a, c, n = 100) {
+            const X = Array.from({ length: n }, () => Math.random() * 20 - 10); // X 範圍在 -10 到 10
+            const noise = () => (Math.random() - 0.5) * c; // 噪聲值
+            const y = X.map(x => a * x + 50 + noise());
+            return { X, y };
+        }
 
-        // Linear Regression
-        let n = X.length;
-        let sumX = X.reduce((a, b) => a + b, 0);
-        let sumY = y.reduce((a, b) => a + b, 0);
-        let sumXY = X.map((xi, i) => xi * y[i]).reduce((a, b) => a + b, 0);
-        let sumX2 = X.map(xi => xi * xi).reduce((a, b) => a + b, 0);
+        function plotData(a, c) {
+            const { X, y } = generateData(a, c);
 
-        let slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX ** 2);
-        let intercept = (sumY - slope * sumX) / n;
+            // 回歸線 (理想情況下的線性模型)
+            const xLine = [-10, 10];
+            const yLine = xLine.map(x => a * x + 50);
 
-        // Predictions
-        const xLine = [0, 2];
-        const yLine = xLine.map(x => intercept + slope * x);
+            const trace1 = {
+                x: X,
+                y: y,
+                mode: 'markers',
+                type: 'scatter',
+                name: 'Data Points'
+            };
 
-        // Plot with Plotly
-        const trace1 = {
-            x: X, y: y,
-            mode: 'markers',
-            type: 'scatter',
-            name: 'Data Points'
-        };
+            const trace2 = {
+                x: xLine,
+                y: yLine,
+                mode: 'lines',
+                name: 'Regression Line',
+                line: { color: 'red' }
+            };
 
-        const trace2 = {
-            x: xLine, y: yLine,
-            mode: 'lines',
-            name: 'Regression Line'
-        };
+            const layout = {
+                title: '線性回歸範例',
+                xaxis: { title: 'X' },
+                yaxis: { title: 'y' }
+            };
 
-        const layout = {
-            title: 'Linear Regression Example',
-            xaxis: { title: 'X' },
-            yaxis: { title: 'Y' }
-        };
+            Plotly.newPlot('plot', [trace1, trace2], layout);
+        }
 
-        Plotly.newPlot('plot', [trace1, trace2], layout);
+        // 初始繪圖
+        plotData(3, 10);
+
+        // 監聽輸入變化，重新繪圖
+        document.getElementById('slope').addEventListener('input', (e) => {
+            const a = parseFloat(e.target.value);
+            const c = parseFloat(document.getElementById('noise').value);
+            plotData(a, c);
+        });
+
+        document.getElementById('noise').addEventListener('input', (e) => {
+            const a = parseFloat(document.getElementById('slope').value);
+            const c = parseFloat(e.target.value);
+            plotData(a, c);
+        });
     </script>
 
 </body>
