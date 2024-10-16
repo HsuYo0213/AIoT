@@ -8,21 +8,25 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
-        body {
-            background-color: #f8f9fa; /* 淺灰色背景 */
-            color: #000;
+        body.night-mode {
+            background-color: #121212;
+            color: #ffffff;
         }
 
-        .card {
-            background-color: #ffffff;
+        .card.night-mode {
+            background-color: #1f1f1f;
         }
 
         .btn-toggle {
-            display: none; /* 移除夜間模式按鈕 */
+            position: absolute;
+            top: 10px;
+            right: 10px;
         }
     </style>
 </head>
-<body>
+<body class="bg-light">
+
+    <button class="btn btn-outline-light btn-toggle" onclick="toggleNightMode()">🌙 夜間模式</button>
 
     <div class="container mt-5">
         <h1 class="text-center mb-4">Linear Regression with Adjustable Parameters</h1>
@@ -108,12 +112,14 @@
                 title: 'Linear Regression Example',
                 xaxis: { title: 'X' },
                 yaxis: { title: 'Y' },
-                plot_bgcolor: '#ffffff',
-                paper_bgcolor: '#ffffff',
-                font: { color: '#000' }
             };
 
             Plotly.newPlot('plot', [trace1, trace2], layout);
+        }
+
+        function toggleNightMode() {
+            document.body.classList.toggle('night-mode');
+            document.querySelectorAll('.card').forEach(card => card.classList.toggle('night-mode'));
         }
 
         slopeInput.addEventListener('input', updateValues);
