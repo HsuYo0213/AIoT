@@ -68,65 +68,77 @@
 
     <script>
         const slopeInput = document.getElementById('slope');
-        const noiseInput = document.getElementById('noise');
-        const pointsInput = document.getElementById('points');
-        const slopeValue = document.getElementById('slopeValue');
-        const noiseValue = document.getElementById('noiseValue');
-        const pointsValue = document.getElementById('pointsValue');
+    const noiseInput = document.getElementById('noise');
+    const pointsInput = document.getElementById('points');
+    const slopeValue = document.getElementById('slopeValue');
+    const noiseValue = document.getElementById('noiseValue');
+    const pointsValue = document.getElementById('pointsValue');
+    let isNightMode = false; // 追蹤目前模式
 
-        function updateValues() {
-            slopeValue.textContent = slopeInput.value;
-            noiseValue.textContent = noiseInput.value;
-            pointsValue.textContent = pointsInput.value;
-            plotLinearRegression();
-        }
-
-        function generateData(slope, noise, points) {
-            const X = Array.from({ length: points }, () => Math.random() * 20 - 10);
-            const Y = X.map(x => slope * x + 50 + noise * (Math.random() - 0.5));
-            return { X, Y };
-        }
-
-        function plotLinearRegression() {
-            const slope = parseFloat(slopeInput.value);
-            const noise = parseFloat(noiseInput.value);
-            const points = parseInt(pointsInput.value);
-            const { X, Y } = generateData(slope, noise, points);
-
-            const sumX = X.reduce((a, b) => a + b, 0);
-            const sumY = Y.reduce((a, b) => a + b, 0);
-            const sumXY = X.reduce((sum, x, i) => sum + x * Y[i], 0);
-            const sumX2 = X.reduce((sum, x) => sum + x * x, 0);
-            const n = X.length;
-
-            const calcSlope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX ** 2);
-            const intercept = (sumY - calcSlope * sumX) / n;
-
-            const xLine = [-10, 10];
-            const yLine = xLine.map(x => intercept + calcSlope * x);
-
-            const trace1 = { x: X, y: Y, mode: 'markers', name: 'Data Points' };
-            const trace2 = { x: xLine, y: yLine, mode: 'lines', name: 'Regression Line' };
-
-            const layout = {
-                title: 'Linear Regression Example',
-                xaxis: { title: 'X' },
-                yaxis: { title: 'Y' },
-            };
-
-            Plotly.newPlot('plot', [trace1, trace2], layout);
-        }
-
-        function toggleNightMode() {
-            document.body.classList.toggle('night-mode');
-            document.querySelectorAll('.card').forEach(card => card.classList.toggle('night-mode'));
-        }
-
-        slopeInput.addEventListener('input', updateValues);
-        noiseInput.addEventListener('input', updateValues);
-        pointsInput.addEventListener('input', updateValues);
-
+    function updateValues() {
+        slopeValue.textContent = slopeInput.value;
+        noiseValue.textContent = noiseInput.value;
+        pointsValue.textContent = pointsInput.value;
         plotLinearRegression();
+    }
+
+    function generateData(slope, noise, points) {
+        const X = Array.from({ length: points }, () => Math.random() * 20 - 10);
+        const Y = X.map(x => slope * x + 50 + noise * (Math.random() - 0.5));
+        return { X, Y };
+    }
+
+    function plotLinearRegression() {
+        const slope = parseFloat(slopeInput.value);
+        const noise = parseFloat(noiseInput.value);
+        const points = parseInt(pointsInput.value);
+        const { X, Y } = generateData(slope, noise, points);
+
+        const sumX = X.reduce((a, b) => a + b, 0);
+        const sumY = Y.reduce((a, b) => a + b, 0);
+        const sumXY = X.reduce((sum, x, i) => sum + x * Y[i], 0);
+        const sumX2 = X.reduce((sum, x) => sum + x * x, 0);
+        const n = X.length;
+
+        const calcSlope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX ** 2);
+        const intercept = (sumY - calcSlope * sumX) / n;
+
+        const xLine = [-10, 10];
+        const yLine = xLine.map(x => intercept + calcSlope * x);
+
+        const trace1 = { x: X, y: Y, mode: 'markers', name: 'Data Points' };
+        const trace2 = { x: xLine, y: yLine, mode: 'lines', name: 'Regression Line' };
+
+        const layout = {
+            title: 'Linear Regression Example',
+            xaxis: { 
+                title: 'X', 
+                color: isNightMode ? '#ffffff' : '#000000' // 動態設定軸文字顏色
+            },
+            yaxis: { 
+                title: 'Y', 
+                color: isNightMode ? '#ffffff' : '#000000' 
+            },
+            plot_bgcolor: isNightMode ? '#1f1f1f' : '#ffffff', // 背景顏色
+            paper_bgcolor: isNightMode ? '#1f1f1f' : '#ffffff', // 外層背景色
+            font: { color: isNightMode ? '#ffffff' : '#000000' } // 字體顏色
+        };
+
+        Plotly.newPlot('plot', [trace1, trace2], layout);
+    }
+
+    function toggleNightMode() {
+        isNightMode = !isNightMode; // 更新模式狀態
+        document.body.classList.toggle('night-mode');
+        document.querySelectorAll('.card').forEach(card => card.classList.toggle('night-mode'));
+        plotLinearRegression(); // 重新繪製圖表，更新顏色
+    }
+
+    slopeInput.addEventListener('input', updateValues);
+    noiseInput.addEventListener('input', updateValues);
+    pointsInput.addEventListener('input', updateValues);
+
+    plotLinearRegression();
     </script>
 
 </body>
